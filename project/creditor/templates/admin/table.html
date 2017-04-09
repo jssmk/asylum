@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+@media print
+{    
+   .no-print, .no-print *
+   {
+      display: none !important;
+   }
+}
+</style>
+{% endblock %}
+
+
+{% block title %} {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+
+{% block content %}
+
+<p>Month: 
+</p>
+
+<h3>{% trans "Summary" %}</h3>
+<p>{% trans "Month:" %} {{ month }}-{{ year }}</p>
+<table>
+<tr><th>{% trans "Income" %}</th><td>{{ income.sum }}</td></tr>
+<tr><th>{% trans "Receivables" %}</th><td>{{ receivables.sum }}</td></tr>
+<tr><th>{% trans "Balance" %}</th><td>{{ total.sum }}</td></tr>
+</table>
+
+<h3>{% trans "Transactions" %}</h3>
+
+<table>
+  {% for list_item in object_list %}
+  <tr>
+    <td>{{ list_item.owner }}</td>
+    <td>{{ list_item.amount }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
+
