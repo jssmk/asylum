@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 
 {% load i18n %}
-{% load keyvalue %}
+{% load month_sum_value %}
 
 {% block extrastyle %}
 <style>
@@ -34,10 +34,10 @@
 </tr>
 {% for m in months %}
 <tr>
-<th><a href="{% url 'table' year='2017' month=m %}">{{ m }}</a></th>
-<td>{{income|keyvalue:m}}</td>
-<td>{{receivables|keyvalue:m}}</td>
-<td></td>
+<th><a href="{% url 'table_m' year='2017' month=m %}">{{ m }}</a></th>
+<td><span style="color: green;">{{income|month_sum_value:m}}</span></td>
+<td><span style="color: red;">{{receivables|month_sum_value:m}}</span></td>
+<td>{% if total|month_sum_value:m < 0 %}<span style="color: red;">{% else %}<span style="color: green;">{% endif %}{{total|month_sum_value:m}}</span></td>
 </tr>
 {% endfor %}
 </table>

@@ -20,11 +20,24 @@
 
 {% block content %}
 
-<p>Month: 
-</p>
 
-<h3>{% trans "Summary" %}</h3>
-<p>{% trans "Month:" %} {{ month }}-{{ year }}</p>
+<table>
+{% for y in years %}
+<tr>
+<th><a href="{% url 'table_y' year=y %}">{{ y }}</a></th>
+{% for m in months %}
+{% if y = year and m = month %}
+<td style="border: solid 2pt red;">{{ m }}</a></td>
+{% else %}
+<td><a href="{% url 'table_m' year=y month=m %}">{{ m }}</a></td>
+{% endif %}
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+
+
+<h3>{% trans "Summary" %} {{ month }}-{{ year }}</h3>
 <table>
 <tr><th>{% trans "Income" %}</th><td>{{ income.sum }}</td></tr>
 <tr><th>{% trans "Receivables" %}</th><td>{{ receivables.sum }}</td></tr>
@@ -37,7 +50,9 @@
   {% for list_item in object_list %}
   <tr>
     <td>{{ list_item.owner }}</td>
-    <td>{{ list_item.amount }}</td>
+    {% if list_item.amount < 0 %}<td style="color: red;">{{ list_item.amount }}</td>
+    {% else %}<td style="color: green;">+{{ list_item.amount }}</td>{% endif %}
+    <td>{{ list_item.tag }}</td>
   </tr>
   {% endfor %}
 </table>
