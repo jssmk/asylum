@@ -10,19 +10,16 @@ class TransactionMonthView(ListView):
    model = Transaction
    template_name = "admin/table.html"
    
-   param_tag = 0
-   tag_label = ""
+   param_tag = None
    def get_queryset(self):
       
       self.param_year = self.kwargs['year']
       self.param_month = self.kwargs['month']
-#if('tag' in self.kwargs):
-  #      self.param_tag = int(self.kwargs['tag'])
-      
+
       if('tag' in self.kwargs and int(self.kwargs['tag']) in TransactionTag.objects.values_list('pk', flat=True)):
-         self.param_tag = int(self.kwargs['tag'])
-         self.tag_label = TransactionTag.objects.filter(pk=self.param_tag).first
-         return Transaction.objects.filter(stamp__year=self.param_year).filter(stamp__month=self.param_month).filter(tag__pk=self.param_tag)
+         #print(TransactionTag.objects.filter(pk=int(self.kwargs['tag']))[0])
+         self.param_tag = TransactionTag.objects.filter(pk=int(self.kwargs['tag']))[0]
+         return Transaction.objects.filter(stamp__year=self.param_year).filter(stamp__month=self.param_month).filter(tag__pk=self.param_tag.pk).order_by('owner__lname','owner__fname')
       
       return Transaction.objects.filter(stamp__year=self.param_year).filter(stamp__month=self.param_month).order_by('owner__lname','owner__fname')
    
@@ -35,7 +32,8 @@ class TransactionMonthView(ListView):
       context['total'] = self.get_queryset().aggregate(sum=Sum('amount'))
       context['year'] = self.param_year
       context['tag'] = self.param_tag
-      context['tag_label'] = self.tag_label
+      context['tag_pk'] = 0 if self.param_tag == None else self.param_tag.pk
+      #context['tag_label'] = self.param_tag.label
       context['month'] = self.param_month.rjust(2, "0")
       context['months'] = ['01','02','03','04','05','06','07','08','09','10','11','12']
       context['years'] = [str(d.year) for d in Transaction.objects.datetimes('stamp', 'year')]
@@ -48,15 +46,18 @@ class TransactionYearView(ListView):
    template_name = "admin/table_year.html"
    
    param_year = timezone.now().year
-   param_tag = 0
-   tag_label = ""
+   param_tag = None
    def get_queryset(self):
       
       if('year' in self.kwargs):
          self.param_year = self.kwargs['year']
+       
+      # tag number must refer to existing TransactionTag
       if('tag' in self.kwargs and int(self.kwargs['tag']) in TransactionTag.objects.values_list('pk', flat=True)):
-         self.tag_label = TransactionTag.objects.filter(pk=self.param_tag).first
-         self.param_tag = int(self.kwargs['tag'])
+         self.param_tag = TransactionTag.objects.filter(pk=int(self.kwargs['tag']))[0]
+         #self.tag_label = TransactionTag.objects.filter(pk=self.param_tag)[0]
+         #self.param_tag = self.kwargs['tag']
+         return Transaction.objects.filter(stamp__year=self.param_year).filter(tag__pk=self.param_tag.pk)
       
       return Transaction.objects.filter(stamp__year=self.param_year)
    
@@ -67,7 +68,8 @@ class TransactionYearView(ListView):
       context['income'] = self.get_queryset().filter(amount__gte=0).extra(select={'month': "to_char(stamp, 'MM' )"}).values('month').annotate(sum=Sum('amount')).order_by()
       context['total'] = self.get_queryset().extra(select={'month': "to_char(stamp, 'MM' )"}).values('month').annotate(sum=Sum('amount')).order_by()
       context['tag'] = self.param_tag
-      context['tag_label'] = self.tag_label
+      context['tag_pk'] = 0 if self.param_tag == None else self.param_tag.pk
+      #context['tag_label'] = None if self.param_tag == None else self.param_tag.label
       context['year'] = self.param_year
       context['months'] = ['01','02','03','04','05','06','07','08','09','10','11','12']
       context['years'] = [d.year for d in Transaction.objects.datetimes('stamp', 'year')]
