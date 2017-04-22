@@ -2,11 +2,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from creditor.models import Transaction, TransactionTag
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.utils import timezone
-from django.db.models import Count, Value
-from django.db.models.functions import Concat
-from django.db.models import Func, F
 
 
 class TransactionMonthView(ListView):
@@ -19,10 +16,11 @@ class TransactionMonthView(ListView):
       
       self.param_year = self.kwargs['year']
       self.param_month = self.kwargs['month']
-      if('tag' in self.kwargs):
-        self.param_tag = int(self.kwargs['tag'])
+#if('tag' in self.kwargs):
+  #      self.param_tag = int(self.kwargs['tag'])
       
-      if(self.param_tag in TransactionTag.objects.values_list('pk', flat=True)):
+      if('tag' in self.kwargs and int(self.kwargs['tag']) in TransactionTag.objects.values_list('pk', flat=True)):
+         self.param_tag = int(self.kwargs['tag'])
          self.tag_label = TransactionTag.objects.filter(pk=self.param_tag).first
          return Transaction.objects.filter(stamp__year=self.param_year).filter(stamp__month=self.param_month).filter(tag__pk=self.param_tag)
       
@@ -56,7 +54,7 @@ class TransactionYearView(ListView):
       
       if('year' in self.kwargs):
          self.param_year = self.kwargs['year']
-      if('tag' in self.kwargs):
+      if('tag' in self.kwargs and int(self.kwargs['tag']) in TransactionTag.objects.values_list('pk', flat=True)):
          self.tag_label = TransactionTag.objects.filter(pk=self.param_tag).first
          self.param_tag = int(self.kwargs['tag'])
       

@@ -22,34 +22,33 @@
 {% block content %}
 
 
-<div style="float: right;">
+<div style="float: right; max-width:400px">
+
 <h3>{% trans "Filter by transaction types" %}</h3>
-<table>
-<tr>
-<th>{% trans "Types" %}</th>
-<td><a href="{% url 'table_y' year=year %}">{% trans "All types" %}</a></td>
+<span><a style="display: inline-block; margin-right: 10px;" href="{% url 'table_y' year=year %}">{% trans "All types" %}</a></span>
 {% for t in tags %}
 {% if t.pk = tag %}
-<td style="border: solid 2pt red;"><a href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+<span style="border: solid 2pt red; display: inline-block; margin-right: 10px"><a href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></span>
 {% else %}
-<td><a href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+<span><a style="display: inline-block; margin-right: 10px;" href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></span>
 {% endif %}
 {% endfor %}
-</tr>
-</table>
+
+
+<h3>{% trans "Month selection" %}</h3>
 <table>
 {% for y in years %}
 <tr>
-<th><a href="{% url 'table_y' year=y %}">{{ y }}</a></th>
+<th><a href="{% url 'table_y' year=y tag=tag %}">{{ y }}</a></th>
 {% for m in months %}
-<td><a href="{% url 'table_m' year=y month=m %}">{{ m }}</a></td>
+<td><a href="{% url 'table_m' year=y month=m tag=tag %}">{{ m }}</a></td>
 {% endfor %}
 </tr>
 {% endfor %}
 </table>
 </div>
 
-
+<div style="clear: left">
 
 
 
@@ -75,6 +74,7 @@
 {% endfor %}
 </table>
 
+</div>
 
 {% endblock content %}
 
