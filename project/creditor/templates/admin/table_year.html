@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 
 {% load i18n %}
-{% load month_sum_value %}
+{% load aggregation_utils %}
 
 {% block extrastyle %}
 <style>
@@ -22,6 +22,39 @@
 {% block content %}
 
 
+<div style="float: right;">
+<h3>{% trans "Filter by transaction types" %}</h3>
+<table>
+<tr>
+<th>{% trans "Types" %}</th>
+<td><a href="{% url 'table_y' year=year %}">{% trans "All types" %}</a></td>
+{% for t in tags %}
+{% if t.pk = tag %}
+<td style="border: solid 2pt red;"><a href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+{% else %}
+<td><a href="{% url 'table_y' year=year tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+{% endif %}
+{% endfor %}
+</tr>
+</table>
+<table>
+{% for y in years %}
+<tr>
+<th><a href="{% url 'table_y' year=y %}">{{ y }}</a></th>
+{% for m in months %}
+<td><a href="{% url 'table_m' year=y month=m %}">{{ m }}</a></td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
+
+
+
+
+
+<h1>{{ year }} {{ tag_label }}</h1>
+
 <h3>{% trans "Summary" %}</h3>
 <p>{% trans "Year" %} {{ year }}</p>
 
@@ -34,7 +67,7 @@
 </tr>
 {% for m in months %}
 <tr>
-<th><a href="{% url 'table_m' year='2017' month=m %}">{{ m }}</a></th>
+<th><a href="{% url 'table_m' year='2017' month=m tag=tag %}">{{ m }}</a></th>
 <td><span style="color: green;">{{income|month_sum_value:m}}</span></td>
 <td><span style="color: red;">{{receivables|month_sum_value:m}}</span></td>
 <td>{% if total|month_sum_value:m < 0 %}<span style="color: red;">{% else %}<span style="color: green;">{% endif %}{{total|month_sum_value:m}}</span></td>

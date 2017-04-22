@@ -2,6 +2,7 @@
 
 {% load i18n %}
 
+
 {% block extrastyle %}
 <style>
 @media print
@@ -20,29 +21,65 @@
 
 {% block content %}
 
+<div style="float: right;">
+<h3>{% trans "Filter by transaction types" %}</h3>
+<table>
+<tr>
+<th>{% trans "Types" %}</th>
+<td><a href="{% url 'table_m' year=year month=month tag=tag%}">{% trans "All types" %}</a></td>
+{% for t in tags %}
+{% if t.pk = tag %}
+<td style="border: solid 2pt red;"><a href="{% url 'table_m' year=year month=month tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+{% else %}
+<td><a href="{% url 'table_m' year=year month=month tag=t.pk|stringformat:"i" %}">{{ t.label }}</a></td>
+{% endif %}
+{% endfor %}
+</tr>
+</table>
 
+<h3>{% trans "Month selection" %}</h3>
 <table>
 {% for y in years %}
 <tr>
-<th><a href="{% url 'table_y' year=y %}">{{ y }}</a></th>
+<th><a href="{% url 'table_y' year=y tag=tag %}">{{ y }}</a></th>
 {% for m in months %}
 {% if y = year and m = month %}
-<td style="border: solid 2pt red;">{{ m }}</a></td>
+<td style="border: solid 2pt red;"><a href="{% url 'table_m' year=y month=m tag=tag%}">{{ m }}</a></td>
 {% else %}
-<td><a href="{% url 'table_m' year=y month=m %}">{{ m }}</a></td>
+<td><a href="{% url 'table_m' year=y month=m tag=tag%}">{{ m }}</a></td>
 {% endif %}
 {% endfor %}
 </tr>
 {% endfor %}
 </table>
+</div>
 
 
-<h3>{% trans "Summary" %} {{ month }}-{{ year }}</h3>
+<h1>{{ month }}-{{ year }} {{ tag_label }}</h1>
+
+<h3>{% trans "Summary" %}</h3>
 <table>
 <tr><th>{% trans "Income" %}</th><td>{{ income.sum }}</td></tr>
 <tr><th>{% trans "Receivables" %}</th><td>{{ receivables.sum }}</td></tr>
 <tr><th>{% trans "Balance" %}</th><td>{{ total.sum }}</td></tr>
 </table>
+
+
+<h3>{% trans "Frequency table" %}</h3>
+<table>
+<tr>
+<th>{% trans "Amount" %}</th>
+<th>{% trans "Freq" %}</th>
+</tr>
+{% for f in freq_table %}
+<tr>
+<th>{{ f.amount }}</th>
+<td>{{ f.freq }}</td>
+</tr>
+{% endfor %}
+</table>
+
+
 
 <h3>{% trans "Transactions" %}</h3>
 
