@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-30 13:20+0200\n"
+"POT-Creation-Date: 2017-04-23 09:21+0300\n"
 "PO-Revision-Date: 2015-11-29 03:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -15,139 +15,195 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.6\n"
 
-#: admin.py:15
+#: admin.py:18
 #, fuzzy
 #| msgid "Transaction Tags"
 msgid "Transaction tags"
 msgstr "Tapahtuman tägit"
 
-#: admin.py:29 admin.py:68 admin.py:130 handlers.py:9 models.py:39
-#: models.py:75
+#: admin.py:32 admin.py:71 admin.py:133 handlers.py:13 models.py:47
+#: models.py:84 templates/admin/table.html:71
 msgid "Amount"
-msgstr "Määrä"
+msgstr "Arvo"
 
-#: admin.py:34
+#: admin.py:37
 msgid "Negative amount"
-msgstr "Negatiivinen summa"
+msgstr "Negatiivinen arvo"
 
-#: admin.py:35
+#: admin.py:38
 msgid "Positive amount"
-msgstr "Positiivinen summa"
+msgstr "Positiivinen arvo"
 
-#: admin.py:60 handlers.py:6 models.py:35
+#: admin.py:63 handlers.py:9 models.py:43
 msgid "Datetime"
 msgstr "Aika"
 
-#: admin.py:73 admin.py:80
+#: admin.py:76 admin.py:83
 msgid "Active"
-msgstr ""
+msgstr "Aktiiviset"
 
-#: admin.py:78
+#: admin.py:81
 msgid "All"
 msgstr "Kaikki"
 
-#: admin.py:79
+#: admin.py:82
 msgid "Inactive"
 msgstr "Ei-aktiiviset"
 
-#: admin.py:122 models.py:38 models.py:74
+#: admin.py:125 models.py:46 models.py:83
 msgid "Member"
 msgstr "Jäsen"
 
-#: admin.py:144
+#: admin.py:147
 msgid "Start / End"
 msgstr "Alku / Loppu"
 
-#: handlers.py:7
+#: handlers.py:10 handlers.py:11
 msgid "Name"
 msgstr "Nimi"
 
-#: handlers.py:8 models.py:37
+#: handlers.py:12 models.py:45
 msgid "Reference"
 msgstr "Viite"
 
-#: handlers.py:10 models.py:40
+#: handlers.py:14 models.py:48
 msgid "Unique transaction id"
 msgstr "Transaktion yksilöllinen tunniste"
 
-#: handlers.py:17
+#: handlers.py:21
 #, python-format
 msgid "AbstractTransaction %s: %+.2f "
 msgstr ""
 
-#: handlers.py:44
+#: handlers.py:49
 msgid "Transaction handler baseclass, this does nothing"
 msgstr "Transaktioiden baseclass, ei tee mitään"
 
-#: models.py:12 models.py:71
+#: models.py:18 models.py:80
 msgid "Label"
 msgstr "Nimiö"
 
-#: models.py:13
+#: models.py:19
 #, fuzzy
 #| msgid "Transaction Tag"
 msgid "Transaction match"
 msgstr "Tapahtuman tägi"
 
-#: models.py:19
+#: models.py:20
+msgid "Holvi category code"
+msgstr "Holvi-kategorian koodi"
+
+#: models.py:26
 msgid "Transaction Tag"
 msgstr "Tapahtuman tägi"
 
-#: models.py:20
+#: models.py:27
 msgid "Transaction Tags"
 msgstr "Tapahtuman tägit"
 
-#: models.py:36 models.py:73
+#: models.py:44 models.py:82
 msgid "Tag"
 msgstr "Tägi"
 
-#: models.py:44
+#: models.py:52
 #, python-format
 msgid "%+.2f for %s (%s)"
 msgstr ""
 
-#: models.py:45
+#: models.py:53
 #, python-format
 msgid "%+.2f for %s"
 msgstr ""
 
-#: models.py:48
+#: models.py:56
 msgid "Transaction"
 msgstr "Tapahtuma"
 
-#: models.py:49
+#: models.py:57 templates/admin/table.html:84
 msgid "Transactions"
 msgstr "Tapahtumat"
 
-#: models.py:59 models.py:64
+#: models.py:68 models.py:73
 msgid "Monthly"
 msgstr "Kuukausittain"
 
-#: models.py:60 models.py:65
+#: models.py:69 models.py:74
 msgid "Yearly"
 msgstr "Vuosittain"
 
-#: models.py:68
+#: models.py:77
 msgid "Since"
 msgstr "Alkaen"
 
-#: models.py:69
+#: models.py:78
 msgid "Until"
 msgstr "Asti"
 
-#: models.py:72
+#: models.py:81
 msgid "Recurrence type"
 msgstr "Toistuvuuden tyyppi"
 
-#: models.py:80
+#: models.py:89
 #, python-format
 msgid "%+.2f %s for %s (%s)"
 msgstr ""
 
-#: models.py:141
+#: models.py:156
 msgid "Recurring Transaction"
 msgstr "Toistuva tapahtuma"
 
-#: models.py:142
+#: models.py:157
 msgid "Recurring Transactions"
 msgstr "Toistuvat tapahtumat"
+
+#: templates/admin/table.html:19 templates/admin/table_year.html:19
+msgid "Django site admin"
+msgstr ""
+
+#: templates/admin/table.html:26 templates/admin/table_year.html:27
+msgid "Filter by transaction types"
+msgstr "Suodata tapahtumatyypin mukaan"
+
+#: templates/admin/table.html:27 templates/admin/table_year.html:28
+msgid "All types"
+msgstr "Kaikki tyypit"
+
+#: templates/admin/table.html:36 templates/admin/table_year.html:38
+msgid "Month selection"
+msgstr "Valitse kuukausi"
+
+#: templates/admin/table.html:60 templates/admin/table_year.html:57
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#: templates/admin/table.html:62 templates/admin/table_year.html:63
+msgid "Income"
+msgstr "Tulot"
+
+#: templates/admin/table.html:63 templates/admin/table_year.html:64
+msgid "Receivables"
+msgstr "Saatavat"
+
+#: templates/admin/table.html:64
+msgid "Balance"
+msgstr "Balanssi"
+
+#: templates/admin/table.html:68
+msgid "Frequency table"
+msgstr "Frekvenssit"
+
+#: templates/admin/table.html:72
+msgid "Freq"
+msgstr "Frekv."
+
+#: templates/admin/table_year.html:58
+msgid "Year"
+msgstr "Vuosi"
+
+#: templates/admin/table_year.html:62
+msgid "Month"
+msgstr "Kuukausi"
+
+#: templates/admin/table_year.html:65
+msgid "Total"
+msgstr "Yhteensä"
