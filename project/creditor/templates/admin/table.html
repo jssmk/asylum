@@ -16,7 +16,7 @@
 {% endblock %}
 
 
-{% block title %} {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% block title %} {{ site_title|default:_('Summary')|add:' '|add:month|add:'-'|add:year }}{% endblock %}
 
 
 {% block content %}
