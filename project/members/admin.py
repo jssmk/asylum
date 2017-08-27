@@ -6,10 +6,12 @@ from creditor.models import RecurringTransaction
 from django import forms
 from django.contrib import admin
 from django.db import models
+from django.utils import timezone
 from django.utils.functional import allow_lazy, lazy
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from reversion.admin import VersionAdmin
+from django.db.models import Case, Value, When, DecimalField
 
 from .models import Member, MemberNote, MembershipApplication, MembershipApplicationTag, MemberType
 
@@ -104,17 +106,39 @@ class CreditListFilter(admin.SimpleListFilter):
         return queryset.filter(credit_annotated__gt=0)
 
 
+class CreditCurrentYearListFilter(admin.SimpleListFilter):
+    title = _("Credit %s" % timezone.now().year)
+    parameter_name = 'credit_current_year'
+
+    def lookups(self, request, model_admin):
+        return (
+            (-1, _("Negative credit")),
+            (1, _("Positive credit")),
+        )
+
+    def queryset(self, request, queryset):
+        v = self.value()
+        if not v:
+            return queryset
+        print(queryset)
+        queryset = queryset.annotate(credit_annotated_current_year=models.Sum(Case(When(creditor_transactions__stamp__year=timezone.now().year, then='creditor_transactions__amount'), output_field=DecimalField())))
+        if int(v) < 0:
+            return queryset.filter(credit_annotated_current_year__lt=0)
+        return queryset.filter(credit_annotated_current_year__gt=0)
+
+
 class MemberAdmin(VersionAdmin):
     list_display = (
         'rname',
         'email',
         'nick',
         'credit_formatted',
+        'credit_formatted_current_year',
         'mtypes_formatted',
         'grants_formatted',
         'city',
     )
-    list_filter = (MemberTypeListFilter, GrantListFilter, CreditListFilter, CityListFilter)
+    list_filter = (MemberTypeListFilter, GrantListFilter, CreditListFilter, CreditCurrentYearListFilter, CityListFilter)
     inlines = [MemberNoteInline, GrantInline, TokenInline, RTInline]
     search_fields = ['lname', 'fname', 'email', 'nick']
     ordering = ['lname', 'fname']
@@ -136,6 +160,20 @@ class MemberAdmin(VersionAdmin):
     credit_formatted.short_description = _("Credit")
     credit_formatted.admin_order_field = 'credit_annotated'
 
+    def credit_formatted_current_year(self, obj):
+        print(obj.credit_annotated_current_year)
+        print(dir(obj))
+        if obj.credit_annotated_current_year is not None:
+            credit = obj.credit_annotated_current_year
+        else:
+            credit = 0.0
+        color = "green"
+        if credit < 0:
+            color = "red"
+        return format_html("<span style='color: {};'>{}</span>", color, "%+.02f" % credit)
+    credit_formatted_current_year.short_description = _("Credit %s" % timezone.now().year)
+    credit_formatted_current_year.admin_order_field = 'credit_annotated_current_year'
+
     def mtypes_formatted(self, obj):
         return ', '.join((x.label for x in obj.mtypes.all()))
     mtypes_formatted.short_description = _("Membership types")
@@ -146,7 +184,10 @@ class MemberAdmin(VersionAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        qs = qs.annotate(credit_annotated=models.Sum('creditor_transactions__amount'))
+        print(qs.query)
+        qs = qs.annotate(credit_annotated=models.Sum('creditor_transactions__amount'),
+                         credit_annotated_current_year=models.Sum(Case(When(creditor_transactions__stamp__year=timezone.now().year, then='creditor_transactions__amount'), output_field=DecimalField())))
+        print(qs.query)
         return qs
 
 
