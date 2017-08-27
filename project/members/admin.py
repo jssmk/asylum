@@ -107,7 +107,7 @@ class CreditListFilter(admin.SimpleListFilter):
 
 
 class CreditCurrentYearListFilter(admin.SimpleListFilter):
-    title = _("Credit %s" % timezone.now().year)
+    title = _("Credit %d") % timezone.now().year
     parameter_name = 'credit_current_year'
 
     def lookups(self, request, model_admin):
@@ -120,7 +120,6 @@ class CreditCurrentYearListFilter(admin.SimpleListFilter):
         v = self.value()
         if not v:
             return queryset
-        print(queryset)
         queryset = queryset.annotate(credit_annotated_current_year=models.Sum(Case(When(creditor_transactions__stamp__year=timezone.now().year, then='creditor_transactions__amount'), output_field=DecimalField())))
         if int(v) < 0:
             return queryset.filter(credit_annotated_current_year__lt=0)
@@ -161,8 +160,6 @@ class MemberAdmin(VersionAdmin):
     credit_formatted.admin_order_field = 'credit_annotated'
 
     def credit_formatted_current_year(self, obj):
-        print(obj.credit_annotated_current_year)
-        print(dir(obj))
         if obj.credit_annotated_current_year is not None:
             credit = obj.credit_annotated_current_year
         else:
@@ -171,7 +168,7 @@ class MemberAdmin(VersionAdmin):
         if credit < 0:
             color = "red"
         return format_html("<span style='color: {};'>{}</span>", color, "%+.02f" % credit)
-    credit_formatted_current_year.short_description = _("Credit %s" % timezone.now().year)
+    credit_formatted_current_year.short_description = _("Credit %d") % timezone.now().year
     credit_formatted_current_year.admin_order_field = 'credit_annotated_current_year'
 
     def mtypes_formatted(self, obj):
@@ -184,10 +181,8 @@ class MemberAdmin(VersionAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        print(qs.query)
         qs = qs.annotate(credit_annotated=models.Sum('creditor_transactions__amount'),
                          credit_annotated_current_year=models.Sum(Case(When(creditor_transactions__stamp__year=timezone.now().year, then='creditor_transactions__amount'), output_field=DecimalField())))
-        print(qs.query)
         return qs
 
 
