@@ -9,6 +9,28 @@ from reversion.admin import VersionAdmin
 
 from .models import RecurringTransaction, Transaction, TransactionTag
 
+#####
+from django.contrib.admin import AdminSite
+from django.http import HttpResponse
+from .views import TransactionMonthView, TransactionYearView
+
+class TransactionTableViews(AdminSite):
+
+     def get_urls(self):
+         from django.conf.urls import url
+         urls = super(TransactionTableViews, self).get_urls()
+         urls += [
+             url(r'^creditor/$', self.admin_view(self.TransactionMonthView))
+         ]
+         return urls
+
+admin_site = TransactionTableViews()
+#######
+
+
+
+
+
 
 class TransactionTagAdmin(VersionAdmin):
     pass
