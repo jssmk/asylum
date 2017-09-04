@@ -2,6 +2,9 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import permission_required
 
+#from creditor.admin import transaction_table_admin
+
+
 from . import views
 
 urlpatterns = [

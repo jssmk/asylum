@@ -9,27 +9,8 @@ from reversion.admin import VersionAdmin
 
 from .models import RecurringTransaction, Transaction, TransactionTag
 
-#####
 from django.contrib.admin import AdminSite
 from django.http import HttpResponse
-from .views import TransactionMonthView, TransactionYearView
-
-class TransactionTableViews(AdminSite):
-
-     def get_urls(self):
-         from django.conf.urls import url
-         urls = super(TransactionTableViews, self).get_urls()
-         urls += [
-             url(r'^creditor/$', self.admin_view(self.TransactionMonthView))
-         ]
-         return urls
-
-admin_site = TransactionTableViews()
-#######
-
-
-
-
 
 
 class TransactionTagAdmin(VersionAdmin):
@@ -168,6 +149,7 @@ class RecurringTransactionAdmin(VersionAdmin):
         return format_html("<span style='color: {};'>{}</span>", color, obj.start.isoformat())
     dates_formatted.short_description = _("Start / End")
     dates_formatted.admin_order_field = 'start'
+
 
 
 admin.site.register(TransactionTag, TransactionTagAdmin)

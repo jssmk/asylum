@@ -12,7 +12,6 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework import routers
 from rest_framework.authtoken import views as authtoken_views
-from creditor.admin import admin_site
 
 router = routers.DefaultRouter()
 router.register(r'members/types',        members.rest.MemberTypeViewSet)
@@ -38,8 +37,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     url(r'^members/', include('members.urls')),
     url(r'^velkoja/', include('velkoja.urls')),
-    url(r'^creditor/', include('admin_site.urls')),
-    #url(settings.ADMIN_URL+'creditor/', include('creditor.urls')), # is_staff required in creditor.urls
+    url(r'^creditor/', include('creditor.urls')),
 
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/get-token/', authtoken_views.obtain_auth_token),
