@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-# Should always redirect
-def test_views_nonadmin(client):
+# Nonadmins should be redirected
+@pytest.mark.django_db
+def test_views_nonadmin2(client):
     assert client.get('/admin/transaction_table/').status_code == 302
     assert client.get('/admin/transaction_table/2000/').status_code == 302
     assert client.get('/admin/transaction_table/2000/01/').status_code == 302
