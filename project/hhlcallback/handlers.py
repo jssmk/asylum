@@ -129,13 +129,14 @@ class RecurringTransactionsHolviHandler(BaseRecurringTransactionsHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        HOLVI_CNC = get_holvi_connection()
-        if HOLVI_CNC:
-            caa = holvirc.CategoriesAPI(HOLVI_CNC)
-            self.category_maps = {  # Keyed by tag pk
-                1: caa.get_category('101ea72cbfadf52d4f7684a52bdb8947'),  # Membership feee
-                2: caa.get_category('7ac3020b14d926e5f0c6fb005f0457ac'),  # Keyholder fee
-            }
+        if not env.bool('HHL_SKIP_HOLVI', False):
+            HOLVI_CNC = get_holvi_connection()
+            if HOLVI_CNC:
+                caa = holvirc.CategoriesAPI(HOLVI_CNC)
+                self.category_maps = {  # Keyed by tag pk
+                    1: caa.get_category('101ea72cbfadf52d4f7684a52bdb8947'),  # Membership feee
+                    2: caa.get_category('7ac3020b14d926e5f0c6fb005f0457ac'),  # Keyholder fee
+                }
 
     def on_creating(self, rt, t, *args, **kwargs):
         # Only negative amounts go to invoices
@@ -229,6 +230,8 @@ This payment information is valid until further notice, you will be sent notific
         return True
 
     def make_membershipfee_invoice(self, rt, t):
+        if env.bool('HHL_SKIP_HOLVI', False):
+            return True
         HOLVI_CNC = get_holvi_connection()
         if not HOLVI_CNC:
             return True
