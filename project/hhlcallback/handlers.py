@@ -247,7 +247,7 @@ This payment information is valid until further notice, you will be sent notific
             year = t.stamp.year
         else:
             year = datetime.datetime.now().year
-        invoice.items[0].description = "%s %s" % (t.tag.label, year)
+        invoice.items[0].description = "%s for %s" % (t.tag.label, year)
         invoice.items[0].net = -t.amount  # Negative amount transaction -> positive amount invoice
         invoice.items[0].category = self.category_maps[1]
         invoice.subject = "%s / %s" % (invoice.items[0].description, invoice.receiver.name)
