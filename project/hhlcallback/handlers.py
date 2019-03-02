@@ -169,7 +169,11 @@ class RecurringTransactionsHolviHandler(BaseRecurringTransactionsHandler):
         mail.body = """
 (In English below)
 
+Kiitos avainjäseneksi ryhtymisestä!
+
 Tässä avainjäsenyyden maksutietosi Helsinki Hacklab ry:lle. Vuosijäsenmaksut ovat eri asia ja maksetaan eri viitteellä eri tilille.
+
+Tämä automaattinen viesti lähetetään kerran uuden avainjäsenyyden alkaessa.
 
 Virtuaaliviivakoodi sisältää kaikki maksua koskevat tiedot, ja se on suositeltavin tapa syöttää maksutiedot oikein 
 verkkopankkiisi. Muista tehdä maksusta kuukausittain toistuva. Verkkopankissa on jossain "lue viivakoodi" -tyyppinen nappi,
@@ -192,10 +196,16 @@ Toistuvuus: joka kuukausi
 
 Nämä maksutiedot ovat toistaiseksi voimassa ja niitä koskevat muutokset ilmoitetaan erikseen.
 
+Jos haluat muutoksia maksutietoihisi, lähetä viestiä hallitukselle.
+
 ----
+
+Thank you for key membership!
 
 This is the payment information for your keyholder membership at Helsinki Hacklab ry. Yearly membership fees are handled
 separately, with different reference and different account.
+
+This automated message is sent once in the beginning of new key membership.
 
 Virtual barcode (usable with Finnish banks) contains all the information required to make a payment and is 
 the recommended way to input the payment information. Remember to make the payment repeat monthly. In the netbank there
@@ -216,6 +226,8 @@ Due date: Choose a date that suits you, preferably early in the first half of th
 Repeat payment: Monthly
 
 This payment information is valid until further notice, you will be sent notification of changes.
+
+Please contact the board if you want changes in your payments.
         """.format(
             iban=iban,
             ref=t.reference,
